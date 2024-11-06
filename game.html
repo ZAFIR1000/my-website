@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: yellow;
+            background-color: aquamarine;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 5px;
+            margin: 20px auto;
+            color: aqua;
+        }
+        .cell {
+            margin-left: 520px;
+            width: 100px;
+            height: 100px;
+            font-size: 80px;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+            background-color: #0066ff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tic-Tac-Toe</h1>
+    <div class="board" id="board">
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+    </div>
+    <div id="message"></div>
+
+    <script>
+        const board = document.getElementById("board");
+        const cells = document.querySelectorAll("[data-cell]");
+        const message = document.getElementById("message");
+        let currentPlayer = "X";
+        let isGameActive = true;
+
+        const winningCombination = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+
+        function checkWinner() {
+            for (const combination of winningCombination) {
+                const [a, b, c] = combination;
+                if (cells[a].textContent && cells[a].textContent === cells[b].textContent && cells[a].textContent === cells[c].textContent) {
+                    isGameActive = false;
+                    message.textContent = `${currentPlayer} wins!`;
+                }
+            }
+
+            if (![...cells].some((cell) => cell.textContent === "")) {
+                isGameActive = false;
+                message.textContent = "It's a draw!";
+            }
+        }
+
+        function handleClick(event) {
+            const cell = event.target;
+
+            if (!isGameActive || cell.textContent !== "") {
+                return;
+            }
+
+            cell.textContent = currentPlayer;
+            checkWinner();
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+        }
+
+        function restartGame() {
+            cells.forEach((cell) => (cell.textContent = ""));
+            currentPlayer = "X";
+            isGameActive = true;
+            message.textContent = "";
+        }
+
+        cells.forEach((cell) => cell.addEventListener("click", handleClick));
+        document.getElementById("restart").addEventListener("click", restartGame);
+    </script>
+</body>
+</html>
